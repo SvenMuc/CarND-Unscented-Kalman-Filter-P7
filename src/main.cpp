@@ -249,13 +249,18 @@ int main(int argc, char** argv)
           VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
           
           // write UKF estimates and ground truth to output file:
-          // File format: est_px est_py est_vx est_vy meas_px meas_py gt_px gt_py gt_vx gt_vy rmse_x rmse_x rmse_vx rmse_vy NIS_radar NIS_lidar
+          // File format: sensor est_px est_py est_vx est_vy meas_px meas_py gt_px gt_py gt_vx gt_vy rmse_x rmse_x rmse_vx rmse_vy nis_radar nis_lidar
           if (output_file.is_open()) {
-            output_file << estimate(0) << " " << estimate(1) << " " << estimate(2) << " " << estimate(3) << " ";
-            output_file << meas_px << " " << meas_py << " ";
-            output_file << x_gt << " " << y_gt << " " << vx_gt << " " << vy_gt << " ";
-            output_file << RMSE(0) << " " << RMSE(1) << " " << RMSE(2) << " " << RMSE(3) << " ";
-            output_file << NIS_radar << " " << NIS_lidar << "\n";
+            if ((sensor_type.compare("L") == 0 && ukf.use_lidar_) ||
+                (sensor_type.compare("R") == 0 && ukf.use_radar_)) {
+
+              output_file << sensor_type << " ";
+              output_file << estimate(0) << " " << estimate(1) << " " << estimate(2) << " " << estimate(3) << " ";
+              output_file << meas_px << " " << meas_py << " ";
+              output_file << x_gt << " " << y_gt << " " << vx_gt << " " << vy_gt << " ";
+              output_file << RMSE(0) << " " << RMSE(1) << " " << RMSE(2) << " " << RMSE(3) << " ";
+              output_file << NIS_radar << " " << NIS_lidar << "\n";
+            }
           }
           
           cout << "p_x: " << p_x << " p_y: " << p_y << " NIS-Radar: " << NIS_radar << " NIS-LIDAR: " << NIS_lidar << endl;
