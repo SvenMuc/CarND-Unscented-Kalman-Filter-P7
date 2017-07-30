@@ -38,7 +38,7 @@ UKF::UKF() {
   x_ = VectorXd(n_x_);
 
   // initial covariance matrix
-  P_ = MatrixXd(5, 5);
+  P_ = MatrixXd(n_x_, n_x_);
 
   // initial augmented sigma points
   Xsig_aug_ = MatrixXd(n_aug_, 2 * n_aug_ + 1);
